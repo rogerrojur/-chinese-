@@ -60,7 +60,12 @@ def get_words(fname, token_size=4, appear=5):
             return True if word in word_set else False
         else:
             return True if all([sen[st: st + token_size] in word_set for st in range(len(word) - (token_size - 1))]) else False
-    return {k: v for k, v in result.items() if filter2(k, token_size, word_set)}
+    def filter3(word):
+        if any([err in word for err in '0123456789qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM，。、？：；、——-‘’“”《》￥@！（）【】']):
+            return False
+        else:
+            return True
+    return {k: v for k, v in result.items() if filter2(k, token_size, word_set) and filter3(k)}
 
 def save_words(path, myDict):
     jsObj = json.dumps(myDict)
@@ -78,7 +83,7 @@ def main(srcPath, dstPath):
     save_words(dstPath, get_words(srcPath))
 
 if __name__ == '__main__':
-    main('icwb2-data/testing/pku_test.utf8', 'pku_words.json')
-    words = load_words('pku_words.json')
+    main('icwb2-data/testing/as_test.utf8', 'as_test.json')
+    words = load_words('as_test.json')
     for k, v in words.items():
         print(k, v)
